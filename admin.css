@@ -1,0 +1,48 @@
+.admin-shell { width: min(1040px, calc(100% - 36px)); margin: 32px auto 48px; }
+.admin-title { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.admin-title .eyebrow { margin-bottom: 8px; }
+.admin-title h1 { font-size: clamp(26px, 4vw, 38px); }
+.virtual-badge { padding: 7px 10px; border: 1px solid rgba(237,197,123,.24); border-radius: 20px; color: var(--gold); font: 8px Consolas, monospace; letter-spacing: .07em; white-space: nowrap; }
+.admin-intro { max-width: 760px; margin: 14px 0 22px; color: #9da9bf; font-size: 11px; line-height: 1.7; }
+.admin-card { margin-top: 12px; padding: 17px; border: 1px solid var(--line); border-radius: 10px; background: rgba(16,24,39,.92); }
+.admin-card h2 { margin: 0; color: #e1e7f2; font-size: 14px; }
+.admin-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+.admin-field { display: flex; min-width: 0; flex-direction: column; gap: 6px; color: #aeb9cf; font-size: 9px; line-height: 1.4; }
+.admin-field input, .admin-field textarea, .admin-table input, .multiplier-card input { min-width: 0; width: 100%; padding: 8px; border: 1px solid rgba(163,179,224,.15); border-radius: 5px; outline: none; background: #0b1322; color: var(--text); font-size: 11px; }
+.admin-field input:focus, .admin-field textarea:focus, .admin-table input:focus, .multiplier-card input:focus { border-color: rgba(237,197,123,.65); }
+.admin-field textarea { resize: vertical; font: 11px Consolas, monospace; line-height: 1.6; }
+.full-field { margin-top: 13px; }
+.admin-hint, .admin-section-heading p { margin: 6px 0 0; color: #818ea6; font-size: 9px; line-height: 1.55; }
+.admin-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.admin-section-heading > strong { color: var(--gold); font: 600 11px Consolas, monospace; }
+.admin-section-heading > strong.is-error { color: #ff9c9c; }
+.admin-table-wrap { overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th { padding: 7px; color: #8592a9; font-size: 9px; font-weight: 500; text-align: left; white-space: nowrap; }
+.admin-table td { padding: 5px 7px; border-top: 1px solid rgba(197,210,255,.06); color: #c0cadb; font-size: 10px; white-space: nowrap; }
+.admin-table td:first-child { min-width: 140px; }
+.admin-table td:last-child { color: var(--gold); font: 10px Consolas, monospace; }
+.admin-table input { padding: 6px; }
+.table-symbol { margin-right: 4px; font-size: 15px; }
+.admin-multipliers { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px; }
+.multiplier-card { display: flex; flex-direction: column; gap: 5px; color: var(--gold); text-align: center; font: 10px Consolas, monospace; }
+.multiplier-card small { color: #8996ad; font-size: 8px; }
+.multiplier-card input { text-align: center; }
+.admin-actions { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.restore-button { padding: 8px 11px; border: 1px solid var(--line); border-radius: 6px; background: rgba(255,255,255,.025); color: #c2cbda; font-size: 9px; cursor: pointer; }
+.restore-button:hover { border-color: rgba(237,197,123,.5); color: var(--text); }
+.save-status { color: #8794aa; font-size: 9px; }
+.save-status.is-error { color: #ff9c9c; }
+.admin-shell .formula-note { max-width: 850px; margin: 15px 0; color: #8591a7; font-size: 9px; line-height: 1.65; }
+body:has(.admin-shell) footer { padding-bottom: 20px; }
+@media (max-width: 700px) {
+  .admin-shell { width: calc(100% - 22px); margin-top: 20px; }
+  .admin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-card { padding: 13px; }
+  .admin-multipliers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .admin-table { min-width: 560px; }
+}
+@media (max-width: 420px) {
+  .topbar-note { display: none; }
+  .admin-title { align-items: flex-start; flex-direction: column; }
+}

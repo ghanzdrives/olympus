@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Sudirman Dor — permainan gulungan lokal dengan saldo virtual, bentuk, dan multiplier.">
+  <title>Sudirman Dor — Permainan Lokal</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Sudirman Dor beranda">
+      <span class="brand-mark" aria-hidden="true">✦</span>
+      <span>SUDIRMAN <span class="brand-light">DOR</span></span>
+    </a>
+    <div class="topbar-note"><span class="status-dot"></span> PERMAINAN LOKAL · KREDIT VIRTUAL</div>
+    <a class="admin-link" href="admin.html">Pengaturan <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="game-shell">
+    <section class="board-panel" aria-label="Papan permainan Sudirman Dor">
+      <div class="game-heading">
+        <div>
+          <p class="eyebrow">GULUNGAN · 7 × 5</p>
+          <h1>Sudirman <span>Dor</span></h1>
+        </div>
+        <div class="round-state">
+          <span class="balance-label">SALDO VIRTUAL</span>
+          <strong id="balance" aria-live="polite">Rp 100.000</strong>
+        </div>
+      </div>
+
+      <div class="board-wrap">
+        <div class="board-meta"><span id="round-label">SIAP · 35 POSISI</span><span id="spin-kind">PUTARAN UTAMA</span></div>
+        <div class="slot-board" id="slot-board" role="grid" aria-label="Papan hasil 7 kolom kali 5 baris" aria-live="polite"></div>
+      </div>
+
+      <div class="result-panel" aria-live="polite">
+        <div class="result-topline"><span id="result-icon" aria-hidden="true">◎</span><span id="result" role="status">Pilih taruhan dan mulai putaran.</span></div>
+        <div class="result-detail" id="result-detail">Cocokkan 6+ bentuk yang sama di mana saja pada papan. Hadiah dihitung setelah rangkaian putaran selesai.</div>
+        <div class="pending-credit" id="pending-credit" aria-live="polite" hidden></div>
+      </div>
+    </section>
+
+    <aside class="control-panel" aria-label="Saldo dan kontrol permainan">
+      <section class="bet-section" aria-labelledby="bet-title">
+        <div class="section-heading"><h2 id="bet-title">Nilai taruhan</h2><span id="bet-value">Rp 200</span></div>
+        <div id="bet-options" class="bet-options" aria-label="Pilihan taruhan"></div>
+      </section>
+
+      <button class="spin-button" id="spin" type="button"><span aria-hidden="true">✦</span> PUTAR</button>
+
+      <section class="auto-section" aria-label="Putar otomatis">
+        <div class="section-heading"><h2>Putar otomatis</h2><span class="speed-note">1,25× cepat</span></div>
+        <div class="auto-controls">
+          <label class="auto-count" for="auto-count"><span>Jumlah putaran</span><input id="auto-count" type="number" min="1" max="100" step="1" value="10"></label>
+          <button class="auto-button" id="auto-start" type="button">Mulai</button>
+          <button class="auto-button stop-button" id="auto-stop" type="button" hidden>Hentikan</button>
+        </div>
+        <p class="auto-status" id="auto-status" aria-live="polite">Maksimum 100 putaran per sesi.</p>
+      </section>
+
+      <div class="stats-grid" aria-label="Statistik permainan">
+        <div class="stat"><span>PUTARAN</span><strong id="plays">0</strong></div>
+        <div class="stat"><span>MENANG</span><strong id="wins">0</strong></div>
+        <div class="stat"><span>HASIL BERSIH</span><strong id="net">Rp 0</strong></div>
+      </div>
+
+      <section class="symbol-guide" aria-labelledby="symbol-title">
+        <div class="section-heading"><h2 id="symbol-title">Nilai bentuk · <span id="selected-bet-label">Rp 200</span></h2></div>
+        <div class="legend" id="symbol-legend" aria-label="Nilai bentuk untuk taruhan terpilih"></div>
+        <div class="award-rules" aria-label="Rumus hadiah dan bonus">
+          <p><strong>Minimal kemenangan:</strong> 6 bentuk sama. Nilai dasar Matahari per simbol mengikuti taruhan: Rp200 = Rp15; Rp500 = Rp40; Rp1.000 = Rp80; Rp2.000 = Rp160; Rp5.000 = Rp400; Rp10.000 = Rp800; Rp20.000 = Rp1.600; Rp50.000 = Rp4.000; Rp100.000 = Rp8.000. Simbol lain mengikuti faktor tier.</p>
+          <p><strong>Bonus subtotal simbol cocok:</strong> 6–9: 0% · 10–11: +5% · 12–14: +7,5% · 15+: +15%. Hanya bonus pada rentang tertinggi yang berlaku, tidak ditumpuk; multiplier diterapkan sesudah bonus.</p>
+        </div>
+      </section>
+
+      <details class="history">
+        <summary><span>Riwayat putaran</span></summary>
+        <button class="text-button" id="clear-history" type="button">Bersihkan</button>
+        <ol id="history-list" aria-label="Riwayat hasil terbaru"><li class="empty-history">Belum ada putaran.</li></ol>
+      </details>
+
+      <button class="reset-button" id="reset" type="button">↺ Reset saldo &amp; statistik</button>
+    </aside>
+  </main>
+  <footer><span>Saldo dalam rupiah virtual, hanya untuk permainan lokal dan tidak memiliki nilai uang.</span></footer>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <title>Pengaturan — Sudirman Dor</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+  <script src="admin.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Kembali ke Sudirman Dor">
+      <span class="brand-mark" aria-hidden="true">✦</span>
+      <span>SUDIRMAN <span class="brand-light">DOR</span></span>
+    </a>
+    <div class="topbar-note"><span class="status-dot"></span> KONFIGURASI LOKAL</div>
+    <a class="admin-link" href="index.html">Kembali ke permainan <span aria-hidden="true">↗</span></a>
+  </header>
+  <main class="admin-shell">
+    <div class="admin-title">
+      <div><p class="eyebrow">PENGATURAN PERMAINAN LOKAL</p><h1>Konfigurasi</h1></div>
+      <span class="virtual-badge">TIDAK ADA UANG NYATA</span>
+    </div>
+    <p class="admin-intro">Pengaturan ini tersimpan di browser ini saja dan memengaruhi peluang permainan lokal. Saldo rupiah adalah kredit virtual, tidak dapat dibeli atau dicairkan.</p>
+
+    <section class="admin-card">
+      <h2>Saldo &amp; putaran</h2>
+      <div class="admin-grid">
+        <label class="admin-field">Saldo awal (Rp)<input id="starting-credit" type="number" min="1000" max="1000000000" step="1000"></label>
+        <label class="admin-field">Peluang menang 6–7 bentuk (%)<input id="win-chance-6" data-occurrence="6" type="number" min="0" max="100" step="0.1"></label>
+        <label class="admin-field">Peluang menang 8–9 bentuk (%)<input id="win-chance-8" data-occurrence="8" type="number" min="0" max="100" step="0.1"></label>
+        <label class="admin-field">Peluang menang 10–11 bentuk (%)<input id="win-chance-10" data-occurrence="10" type="number" min="0" max="100" step="0.1"></label>
+        <label class="admin-field">Peluang menang 12–14 bentuk (%)<input id="win-chance-12" data-occurrence="12" type="number" min="0" max="100" step="0.1"></label>
+        <label class="admin-field">Peluang menang 15+ bentuk (%)<input id="win-chance-15" data-occurrence="15" type="number" min="0" max="100" step="0.1"></label>
+        <label class="admin-field">Peluang multiplier per putaran (%)<input id="multiplier-chance" type="number" min="0" max="100" step="0.1"></label>
+        <label class="admin-field">Batas putaran gratis<input id="max-respins" type="number" min="0" max="50" step="1"></label>
+      </div>
+      <p class="admin-hint">Total peluang dasar (taruhan Rp5.000): <strong id="win-chance-total">22%</strong>. Total mencakup semua kelompok, termasuk 6–7, dan tidak boleh melebihi 100%; sisa peluang menghasilkan putaran tanpa kemenangan.</p>
+      <p class="admin-hint">Penyesuaian otomatis per putaran: taruhan di bawah Rp5.000 mengurangi peluang 6–7 / 8–9 / 10–11 / 12–14 / 15+ masing-masing 2 / 2 / 1 / 0,5 / 0,2 poin persentase. Rp5.000 tidak berubah. Rp10.000–Rp50.000 menambah 2 / 2 / 1 / 0,5 / 0,3 poin; Rp100.000 ke atas menambah 4 / 4 / 2 / 1 / 0,5 poin. Peluang tiap kelompok dijaga antara 0% dan 100%; jika total setelah penyesuaian melebihi 100%, nilai dinormalisasi agar total tetap 100%.</p>
+      <label class="admin-field full-field">Pilihan taruhan (satu nominal per baris, Rp)
+        <textarea id="bet-levels" rows="4" spellcheck="false"></textarea>
+      </label>
+      <p class="admin-hint">Gunakan nominal bulat positif yang meningkat. Tombol “Maks” pada permainan memakai nominal taruhan tertinggi.</p>
+    </section>
+
+    <section class="admin-card">
+      <div class="admin-section-heading"><div><h2>Peluang &amp; nilai bentuk</h2><p>Total peluang bentuk otomatis disesuaikan menjadi 100%. Nilai pada tabel adalah nominal per simbol untuk taruhan aktif.</p></div><strong id="chance-total">100%</strong></div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead><tr><th>Bentuk</th><th>Peluang (%)</th><th>Faktor hadiah</th><th>Nilai bentuk · bet aktif</th></tr></thead>
+          <tbody id="tier-settings"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-card">
+      <div class="admin-section-heading">
+        <div><h2>Peluang jumlah multiplier</h2><p>Peluang 2× dan 3× adalah bagian dari peluang multiplier total; 1× mendapat sisa peluang.</p></div>
+      </div>
+      <div class="admin-grid">
+        <label class="admin-field">Peluang tepat 2 multiplier (%)<input id="multiplier-count-2" data-multiplier-count="2" type="number" min="0" max="100" step="0.01"></label>
+        <label class="admin-field">Peluang tepat 3 multiplier (%)<input id="multiplier-count-3" data-multiplier-count="3" type="number" min="0" max="100" step="0.01"></label>
+      </div>
+      <p class="admin-hint">Peluang tepat 1 multiplier (sisa): <strong id="multiplier-one-chance">1,89%</strong>. Default 2 multiplier = 0,1% dan 3 multiplier = 0,01% per putaran. Jumlah peluang 2× dan 3× harus tidak melebihi peluang multiplier per putaran. Maksimal 3 multiplier pada satu putaran.</p>
+    </section>
+
+    <section class="admin-card">
+      <div class="admin-section-heading"><div><h2>Bobot nilai multiplier</h2><p>Bobot relatif untuk memilih nilai multiplier ketika multiplier muncul.</p></div><strong id="multiplier-total">100%</strong></div>
+      <div class="admin-multipliers" id="multiplier-settings"></div>
+    </section>
+
+    <div class="admin-actions">
+      <button class="restore-button" id="restore-settings" type="button">Pulihkan pengaturan awal</button>
+      <span class="save-status" id="save-status" role="status">Perubahan disimpan otomatis.</span>
+    </div>
+    <p class="formula-note">Minimal 6 bentuk sama untuk menang. Nilai dasar Matahari per simbol mengikuti nominal taruhan: Rp200 = Rp15; Rp500 = Rp40; Rp1.000 = Rp80; Rp2.000 = Rp160; Rp5.000 = Rp400; Rp10.000 = Rp800; Rp20.000 = Rp1.600; Rp50.000 = Rp4.000; Rp100.000 = Rp8.000. Hadiah dihitung dari nilai simbol × jumlah cocok, ditambah bonus eksklusif sesuai jumlah cocok (6–9: 0%; 10–11: 5%; 12–14: 7,5%; 15+: 15%), lalu dikalikan multiplier. Bonus berlaku pada subtotal simbol cocok dan tidak ditumpuk. Setelah menang, peluang tiap kelompok untuk putaran berikutnya turun 3 poin persentase, tidak pernah di bawah 0%; setelah tidak menang, peluang kembali ke konfigurasi.</p>
+  </main>
+  <footer><span>Pengaturan ini hanya berlaku di browser dan perangkat ini.</span></footer>
+</body>
+</html>
