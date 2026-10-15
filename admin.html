@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1020">
-  <title>Pengaturan — Sudirman Dor</title>
+  <title>Pengaturan — Ghanz Olympus</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="admin.css">
   <script src="admin.js" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="index.html" aria-label="Kembali ke Sudirman Dor">
+    <a class="brand" href="index.html" aria-label="Kembali ke Ghanz Olympus">
       <span class="brand-mark" aria-hidden="true">✦</span>
-      <span>SUDIRMAN <span class="brand-light">DOR</span></span>
+      <span>GHANZ <span class="brand-light">OLYMPUS</span></span>
     </a>
     <div class="topbar-note"><span class="status-dot"></span> KONFIGURASI LOKAL</div>
     <a class="admin-link" href="index.html">Kembali ke permainan <span aria-hidden="true">↗</span></a>
@@ -37,8 +37,39 @@
         <label class="admin-field">Peluang multiplier per putaran (%)<input id="multiplier-chance" type="number" min="0" max="100" step="0.1"></label>
         <label class="admin-field">Batas putaran gratis<input id="max-respins" type="number" min="0" max="50" step="1"></label>
       </div>
-      <p class="admin-hint">Total peluang dasar (taruhan Rp5.000): <strong id="win-chance-total">22%</strong>. Total mencakup semua kelompok, termasuk 6–7, dan tidak boleh melebihi 100%; sisa peluang menghasilkan putaran tanpa kemenangan.</p>
-      <p class="admin-hint">Penyesuaian otomatis per putaran: taruhan di bawah Rp5.000 mengurangi peluang 6–7 / 8–9 / 10–11 / 12–14 / 15+ masing-masing 2 / 2 / 1 / 0,5 / 0,2 poin persentase. Rp5.000 tidak berubah. Rp10.000–Rp50.000 menambah 2 / 2 / 1 / 0,5 / 0,3 poin; Rp100.000 ke atas menambah 4 / 4 / 2 / 1 / 0,5 poin. Peluang tiap kelompok dijaga antara 0% dan 100%; jika total setelah penyesuaian melebihi 100%, nilai dinormalisasi agar total tetap 100%.</p>
+      <p class="admin-hint">Total peluang dasar (taruhan Rp5.000): <strong id="win-chance-total">7%</strong>. Total mencakup semua kelompok, termasuk 6–7, dan tidak boleh melebihi 100%; sisa peluang menghasilkan putaran tanpa kemenangan.</p>
+      <section class="bet-adjustments" aria-labelledby="bet-adjustments-title">
+        <div class="admin-section-heading">
+          <div><h3 id="bet-adjustments-title">Penyesuaian peluang berdasarkan taruhan</h3><p>Nilai di bawah adalah perubahan dalam poin persentase, bukan pengali. Contoh: peluang 3,4% ditambah 2 poin menjadi 5,4%.</p></div>
+        </div>
+        <div class="bet-adjustment-groups">
+          <fieldset class="bet-adjustment-group">
+            <legend>Taruhan di bawah Rp5.000 <span>mengurangi</span></legend>
+            <label class="admin-field">6–7 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="low" data-bet-adjustment="6"></label>
+            <label class="admin-field">8–9 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="low" data-bet-adjustment="8"></label>
+            <label class="admin-field">10–11 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="low" data-bet-adjustment="10"></label>
+            <label class="admin-field">12–14 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="low" data-bet-adjustment="12"></label>
+            <label class="admin-field">15+ bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="low" data-bet-adjustment="15"></label>
+          </fieldset>
+          <fieldset class="bet-adjustment-group">
+            <legend>Taruhan Rp10.000–Rp50.000 <span>menambah</span></legend>
+            <label class="admin-field">6–7 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="mid" data-bet-adjustment="6"></label>
+            <label class="admin-field">8–9 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="mid" data-bet-adjustment="8"></label>
+            <label class="admin-field">10–11 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="mid" data-bet-adjustment="10"></label>
+            <label class="admin-field">12–14 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="mid" data-bet-adjustment="12"></label>
+            <label class="admin-field">15+ bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="mid" data-bet-adjustment="15"></label>
+          </fieldset>
+          <fieldset class="bet-adjustment-group">
+            <legend>Taruhan Rp100.000 atau lebih <span>menambah</span></legend>
+            <label class="admin-field">6–7 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="high" data-bet-adjustment="6"></label>
+            <label class="admin-field">8–9 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="high" data-bet-adjustment="8"></label>
+            <label class="admin-field">10–11 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="high" data-bet-adjustment="10"></label>
+            <label class="admin-field">12–14 bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="high" data-bet-adjustment="12"></label>
+            <label class="admin-field">15+ bentuk<input type="number" min="-100" max="100" step="0.1" data-bet-adjustment-group="high" data-bet-adjustment="15"></label>
+          </fieldset>
+        </div>
+        <p class="admin-hint">Nilai bawaan (urutannya 6–7 / 8–9 / 10–11 / 12–14 / 15+): taruhan di bawah Rp5.000 = −1,4 / −1 / −0,5 / −0,2 / −0,1 poin; Rp5.000 dan Rp5.001–Rp9.999 tidak berubah; Rp10.000–Rp50.000 = +1 / +0,8 / +0,4 / +0,1 / +0,1 poin; Rp100.000 ke atas = +1,6 / +1,2 / +1 / +0,4 / +0,2 poin. Dengan peluang dasar bawaan, total peluang menang menjadi 3,8% di bawah Rp5.000, 7% pada Rp5.000–Rp9.999, 9,4% pada Rp10.000–Rp50.000, dan 11,4% mulai Rp100.000. Hasil tiap kelompok dibatasi 0–100%; jika total peluang melebihi 100%, semua peluang dinormalisasi agar totalnya 100%.</p>
+      </section>
       <label class="admin-field full-field">Pilihan taruhan (satu nominal per baris, Rp)
         <textarea id="bet-levels" rows="4" spellcheck="false"></textarea>
       </label>
@@ -63,7 +94,7 @@
         <label class="admin-field">Peluang tepat 2 multiplier (%)<input id="multiplier-count-2" data-multiplier-count="2" type="number" min="0" max="100" step="0.01"></label>
         <label class="admin-field">Peluang tepat 3 multiplier (%)<input id="multiplier-count-3" data-multiplier-count="3" type="number" min="0" max="100" step="0.01"></label>
       </div>
-      <p class="admin-hint">Peluang tepat 1 multiplier (sisa): <strong id="multiplier-one-chance">1,89%</strong>. Default 2 multiplier = 0,1% dan 3 multiplier = 0,01% per putaran. Jumlah peluang 2× dan 3× harus tidak melebihi peluang multiplier per putaran. Maksimal 3 multiplier pada satu putaran.</p>
+      <p class="admin-hint">Peluang tepat 1 multiplier (sisa): <strong id="multiplier-one-chance">1,6%</strong>. Bawaan: total 2% per putaran, dengan peluang tepat 2 multiplier 0,3% dan tepat 3 multiplier 0,1% per putaran. Jumlah peluang tepat 2× dan 3× adalah bagian dari peluang total dan tidak boleh melebihinya. Maksimal 3 multiplier pada satu putaran.</p>
     </section>
 
     <section class="admin-card">
@@ -75,7 +106,7 @@
       <button class="restore-button" id="restore-settings" type="button">Pulihkan pengaturan awal</button>
       <span class="save-status" id="save-status" role="status">Perubahan disimpan otomatis.</span>
     </div>
-    <p class="formula-note">Minimal 6 bentuk sama untuk menang. Nilai dasar Matahari per simbol mengikuti nominal taruhan: Rp200 = Rp15; Rp500 = Rp40; Rp1.000 = Rp80; Rp2.000 = Rp160; Rp5.000 = Rp400; Rp10.000 = Rp800; Rp20.000 = Rp1.600; Rp50.000 = Rp4.000; Rp100.000 = Rp8.000. Hadiah dihitung dari nilai simbol × jumlah cocok, ditambah bonus eksklusif sesuai jumlah cocok (6–9: 0%; 10–11: 5%; 12–14: 7,5%; 15+: 15%), lalu dikalikan multiplier. Bonus berlaku pada subtotal simbol cocok dan tidak ditumpuk. Setelah menang, peluang tiap kelompok untuk putaran berikutnya turun 3 poin persentase, tidak pernah di bawah 0%; setelah tidak menang, peluang kembali ke konfigurasi.</p>
+    <p class="formula-note">Minimal 6 bentuk sama untuk menang. Nilai dasar Matahari per simbol mengikuti nominal taruhan: Rp200 = Rp15; Rp500 = Rp40; Rp1.000 = Rp80; Rp2.000 = Rp160; Rp5.000 = Rp400; Rp10.000 = Rp800; Rp20.000 = Rp1.600; Rp50.000 = Rp4.000; Rp100.000 = Rp8.000. Hadiah dihitung dari nilai simbol × jumlah cocok, ditambah bonus eksklusif sesuai jumlah cocok (6–9: 0%; 10–11: 5%; 12–14: 10%; 15+: 15%), lalu dikalikan multiplier. Bonus berlaku pada subtotal simbol cocok dan tidak ditumpuk. Setelah menang, peluang tiap kelompok untuk putaran berikutnya turun 3 poin persentase, tidak pernah di bawah 0%; setelah tidak menang, peluang kembali ke konfigurasi.</p>
   </main>
   <footer><span>Pengaturan ini hanya berlaku di browser dan perangkat ini.</span></footer>
 </body>

@@ -4,31 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1020">
-  <meta name="description" content="Sudirman Dor — permainan gulungan lokal dengan saldo virtual, bentuk, dan multiplier.">
-  <title>Sudirman Dor — Permainan Lokal</title>
+  <meta name="description" content="Ghanz Olympus — permainan gulungan lokal dengan saldo virtual, bentuk, dan multiplier.">
+  <title>Ghanz Olympus — Permainan Lokal</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="index.html" aria-label="Sudirman Dor beranda">
+    <a class="brand" href="index.html" aria-label="Ghanz Olympus beranda">
       <span class="brand-mark" aria-hidden="true">✦</span>
-      <span>SUDIRMAN <span class="brand-light">DOR</span></span>
+      <span>GHANZ <span class="brand-light">OLYMPUS</span></span>
     </a>
     <div class="topbar-note"><span class="status-dot"></span> PERMAINAN LOKAL · KREDIT VIRTUAL</div>
+    <button class="rules-open" id="rules-open" type="button" aria-haspopup="dialog" aria-controls="rules-dialog">Aturan <span aria-hidden="true">?</span></button>
     <a class="admin-link" href="admin.html">Pengaturan <span aria-hidden="true">↗</span></a>
   </header>
 
   <main class="game-shell">
-    <section class="board-panel" aria-label="Papan permainan Sudirman Dor">
+    <section class="board-panel" aria-label="Papan permainan Ghanz Olympus">
       <div class="game-heading">
         <div>
           <p class="eyebrow">GULUNGAN · 7 × 5</p>
-          <h1>Sudirman <span>Dor</span></h1>
+          <h1>Ghanz <span>Olympus</span></h1>
         </div>
         <div class="round-state">
           <span class="balance-label">SALDO VIRTUAL</span>
           <strong id="balance" aria-live="polite">Rp 100.000</strong>
+          <button class="topup-open" id="topup-open" type="button" aria-haspopup="dialog" aria-controls="topup-dialog">＋ Top up</button>
         </div>
       </div>
 
@@ -40,7 +42,6 @@
       <div class="result-panel" aria-live="polite">
         <div class="result-topline"><span id="result-icon" aria-hidden="true">◎</span><span id="result" role="status">Pilih taruhan dan mulai putaran.</span></div>
         <div class="result-detail" id="result-detail">Cocokkan 6+ bentuk yang sama di mana saja pada papan. Hadiah dihitung setelah rangkaian putaran selesai.</div>
-        <div class="pending-credit" id="pending-credit" aria-live="polite" hidden></div>
       </div>
     </section>
 
@@ -55,7 +56,7 @@
       <section class="auto-section" aria-label="Putar otomatis">
         <div class="section-heading"><h2>Putar otomatis</h2><span class="speed-note">1,25× cepat</span></div>
         <div class="auto-controls">
-          <label class="auto-count" for="auto-count"><span>Jumlah putaran</span><input id="auto-count" type="number" min="1" max="100" step="1" value="10"></label>
+          <label class="auto-count" for="auto-count"><span id="auto-count-label">Jumlah putaran</span><input id="auto-count" type="number" min="1" max="100" step="1" value="10"></label>
           <button class="auto-button" id="auto-start" type="button">Mulai</button>
           <button class="auto-button stop-button" id="auto-stop" type="button" hidden>Hentikan</button>
         </div>
@@ -71,10 +72,6 @@
       <section class="symbol-guide" aria-labelledby="symbol-title">
         <div class="section-heading"><h2 id="symbol-title">Nilai bentuk · <span id="selected-bet-label">Rp 200</span></h2></div>
         <div class="legend" id="symbol-legend" aria-label="Nilai bentuk untuk taruhan terpilih"></div>
-        <div class="award-rules" aria-label="Rumus hadiah dan bonus">
-          <p><strong>Minimal kemenangan:</strong> 6 bentuk sama. Nilai dasar Matahari per simbol mengikuti taruhan: Rp200 = Rp15; Rp500 = Rp40; Rp1.000 = Rp80; Rp2.000 = Rp160; Rp5.000 = Rp400; Rp10.000 = Rp800; Rp20.000 = Rp1.600; Rp50.000 = Rp4.000; Rp100.000 = Rp8.000. Simbol lain mengikuti faktor tier.</p>
-          <p><strong>Bonus subtotal simbol cocok:</strong> 6–9: 0% · 10–11: +5% · 12–14: +7,5% · 15+: +15%. Hanya bonus pada rentang tertinggi yang berlaku, tidak ditumpuk; multiplier diterapkan sesudah bonus.</p>
-        </div>
       </section>
 
       <details class="history">
@@ -86,6 +83,103 @@
       <button class="reset-button" id="reset" type="button">↺ Reset saldo &amp; statistik</button>
     </aside>
   </main>
+  <div class="credit-overlay" id="credit-overlay" aria-hidden="true" hidden>
+    <section class="credit-popup" aria-labelledby="credit-title">
+      <span class="credit-sparkle" aria-hidden="true">✦</span>
+      <p class="credit-kicker" id="credit-title">KREDIT VIRTUAL SEMENTARA</p>
+      <strong class="credit-amount" id="credit-amount">Rp 0</strong>
+      <p class="credit-caption" id="credit-caption"></p>
+      <p class="credit-calculation" id="credit-calculation" hidden></p>
+      <p class="credit-total" id="credit-total" hidden></p>
+    </section>
+  </div>
+  <p class="credit-announcement" id="credit-announcement" role="status" aria-live="polite"></p>
+  <dialog class="topup-dialog" id="topup-dialog" aria-labelledby="topup-title">
+    <article class="topup-card">
+      <header class="topup-header">
+        <div><p class="eyebrow">KASIR SIMULASI · GHANZ OLYMPUS</p><h2 id="topup-title">Top up kredit virtual</h2></div>
+        <button class="rules-close" id="topup-close" type="button" aria-label="Tutup top up">×</button>
+      </header>
+      <div class="topup-content">
+        <section class="demo-account" aria-label="Akun demo lokal">
+          <span class="demo-account-mark" aria-hidden="true">✦</span>
+          <div><span class="demo-account-label">AKUN DEMO LOKAL</span><strong>Ghanz Player</strong><small>ID: GO-DEMO-001 · tanpa login</small></div>
+          <span class="demo-account-status">AKTIF</span>
+        </section>
+        <div class="topup-balance">Saldo virtual saat ini <strong id="topup-current-balance">Rp 100.000</strong></div>
+        <form id="topup-form" novalidate>
+          <label class="topup-label" for="topup-amount">Jumlah deposit simulasi <span>Rp</span></label>
+          <div class="topup-input-wrap"><span aria-hidden="true">Rp</span><input id="topup-amount" name="amount" type="number" inputmode="numeric" min="1000" max="1000000000" step="1000" placeholder="Contoh: 25.000" required></div>
+          <div class="topup-presets" aria-label="Pilihan nominal cepat">
+            <button type="button" data-topup-amount="10000">Rp10.000</button>
+            <button type="button" data-topup-amount="25000">Rp25.000</button>
+            <button type="button" data-topup-amount="50000">Rp50.000</button>
+            <button type="button" data-topup-amount="100000">Rp100.000</button>
+          </div>
+          <div class="topup-conversion"><span>Kredit virtual diterima <small>Konversi simulasi 1:1</small></span><strong id="topup-credit-preview">Rp 0</strong></div>
+          <p class="topup-notice">Ini hanya simulasi lokal. Tidak ada pembayaran, transaksi, rekening, atau uang nyata. Kredit hanya tersimpan di browser/perangkat ini dan tidak dapat dicairkan.</p>
+          <p class="topup-status" id="topup-status" role="status" aria-live="polite">Pilih nominal untuk melihat kredit virtual yang akan ditambahkan.</p>
+          <button class="topup-submit" id="topup-submit" type="submit"><span aria-hidden="true">✦</span> Tambahkan kredit virtual</button>
+        </form>
+      </div>
+    </article>
+  </dialog>
+  <dialog class="rules-dialog" id="rules-dialog" aria-labelledby="rules-title">
+    <article class="rules-card">
+      <header class="rules-header">
+        <div><p class="eyebrow">PANDUAN GHANZ OLYMPUS</p><h2 id="rules-title">Aturan permainan</h2></div>
+        <button class="rules-close" id="rules-close" type="button" aria-label="Tutup aturan">×</button>
+      </header>
+      <div class="rules-content">
+        <section class="rules-section">
+          <h3>1. Tujuan dan cara bermain</h3>
+          <ol>
+            <li>Pilih nominal taruhan. Taruhan itu dipakai untuk satu rangkaian putaran.</li>
+            <li>Tekan <strong>PUTAR</strong>. Papan berisi 7 kolom × 5 baris (35 posisi).</li>
+            <li>Kumpulkan sedikitnya 6 simbol yang sama di posisi mana pun pada papan. Simbol tidak harus bersebelahan.</li>
+            <li>Jika tidak ada simbol yang muncul 6 kali, putaran berakhir tanpa hadiah dan taruhan terpakai. Saldo awal bawaan adalah Rp100.000.</li>
+          </ol>
+        </section>
+        <section class="rules-section">
+          <h3>2. Menghitung hadiah</h3>
+          <p>Setiap kelompok simbol menang dihitung sendiri. <strong>Nilai simbol per buah × jumlah simbol</strong>, lalu tambahkan bonus kelompok jika memenuhi syarat. Setelah itu, hasil kelompok dijumlahkan dan dikalikan multiplier putaran.</p>
+          <p>Nilai dasar Matahari per simbol mengikuti taruhan:</p>
+          <div class="rules-values" aria-label="Nilai dasar Matahari per taruhan">
+            <span>Rp200 → Rp15</span><span>Rp500 → Rp40</span><span>Rp1.000 → Rp80</span>
+            <span>Rp2.000 → Rp160</span><span>Rp5.000 → Rp400</span><span>Rp10.000 → Rp800</span>
+            <span>Rp20.000 → Rp1.600</span><span>Rp50.000 → Rp4.000</span><span>Rp100.000 → Rp8.000</span>
+          </div>
+          <p>Nilai simbol lain mengikuti faktor hadiah bawaan: Matahari ×1, Bulan ×2, Bintang ×3, Permata ×4, Planet ×6, Kristal ×10, Mahkota ×20, Trisula ×50, dan Kuil ×100. Nilai per simbol juga ditampilkan di bagian <strong>Nilai bentuk</strong>. Faktor dapat berubah melalui Pengaturan.</p>
+          <div class="rules-example"><strong>Contoh:</strong> taruhan Rp5.000 memberi nilai Matahari Rp400 per buah. Enam Matahari = 6 × Rp400 = Rp2.400. Sepuluh Matahari = 10 × Rp400 = Rp4.000, lalu bonus +5% = Rp4.200, sebelum multiplier.</div>
+        </section>
+        <section class="rules-section">
+          <h3>3. Bonus jumlah simbol</h3>
+          <div class="rules-bonus">
+            <span>6–9 simbol <strong>tanpa bonus</strong></span>
+            <span>10–11 simbol <strong>+5%</strong></span>
+            <span>12–14 simbol <strong>+10%</strong></span>
+            <span>15 atau lebih <strong>+15%</strong></span>
+          </div>
+          <p>Bonus hanya memakai rentang tertinggi yang dicapai; bonus tidak dijumlahkan bertingkat.</p>
+        </section>
+        <section class="rules-section">
+          <h3>4. Multiplier dan putaran gratis</h3>
+          <ul>
+            <li>Multiplier yang muncul pada papan akan mengalikan hadiah kelompok yang menang pada putaran tersebut. Jika ada lebih dari satu, kalikan nilainya satu sama lain. Contoh: ×2 dan ×5 menjadi ×10.</li>
+            <li>Multiplier tanpa kelompok simbol menang tidak memberi hadiah.</li>
+            <li>Setiap putaran yang menang memicu satu putaran gratis berikutnya. Putaran gratis tidak memotong saldo lagi, dan hadiahnya ditambahkan ke rangkaian yang sama.</li>
+            <li>Rangkaian berhenti saat putaran tidak menang atau mencapai batas putaran gratis yang ditetapkan di Pengaturan (bawaan: 5 putaran gratis).</li>
+          </ul>
+        </section>
+        <section class="rules-section">
+          <h3>5. Peluang dan pengaturan</h3>
+          <p>Peluang menang bawaan pada taruhan Rp5.000: 6–7 simbol = 3,4%; 8–9 = 2%; 10–11 = 1%; 12–14 = 0,4%; dan 15+ = 0,2% per putaran (total 7%). Peluang bentuk di papan: Matahari 79,6%; Bulan 8%; Bintang 5%; Permata 3%; Planet 2%; Kristal 1%; Mahkota 0,8%; Trisula 0,4%; Kuil 0,2%. Penyesuaian taruhan mengurangi peluang di bawah Rp5.000, tidak mengubahnya pada Rp5.000, dan menambahnya pada Rp10.000–Rp50.000 serta Rp100.000 ke atas. Besar penyesuaiannya dapat dilihat dan diubah lewat Pengaturan. Setelah menang, peluang tiap kelompok untuk putaran berikutnya turun 3 poin persentase (minimum 0%). Setelah putaran tanpa kemenangan, peluang kembali ke pengaturan.</p>
+          <p>Peluang multiplier bawaan adalah 2% per putaran: tepat 1 multiplier = 1,6%, tepat 2 = 0,3%, dan tepat 3 = 0,1%. Nilai yang mungkin muncul: ×2, ×5, ×10, ×20, ×50, atau ×100, dengan bobot masing-masing 96%; 2,2%; 1%; 0,5%; 0,2%; dan 0,1%. Peluang, bobot nilai simbol, multiplier, penyesuaian taruhan, dan batas putaran gratis dapat diubah melalui <strong>Pengaturan</strong> di browser ini.</p>
+        </section>
+        <p class="rules-notice">Saldo hanya kredit virtual yang tersimpan di browser dan perangkat ini. Tombol Top up hanya simulasi lokal dengan konversi 1:1—tidak ada deposit, pembayaran, akun keuangan, atau pencairan uang nyata. Hasil tidak menjamin keuntungan.</p>
+      </div>
+    </article>
+  </dialog>
   <footer><span>Saldo dalam rupiah virtual, hanya untuk permainan lokal dan tidak memiliki nilai uang.</span></footer>
 </body>
 </html>

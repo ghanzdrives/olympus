@@ -2,39 +2,47 @@
   "use strict";
 
   const STORAGE_KEY = "sudirman-dor-local-v4";
+  const SETTINGS_VERSION = 3;
   const MULTIPLIERS = [2, 5, 10, 20, 50, 100];
   const OCCURRENCE_KEYS = ["6", "8", "10", "12", "15"];
   const WINNING_RANGES = OCCURRENCE_KEYS;
-  const defaultOccurrenceChances = { "6": 10, "8": 8, "10": 3, "12": 0.8, "15": 0.2 };
-  const defaultMultiplierCountChances = { "2": 0.1, "3": 0.01 };
+  const defaultOccurrenceChances = { "6": 3.4, "8": 2, "10": 1, "12": 0.4, "15": 0.2 };
+  const defaultMultiplierCountChances = { "2": 0.3, "3": 0.1 };
+  const defaultBetChanceAdjustments = {
+    low: { "6": -1.4, "8": -1, "10": -0.5, "12": -0.2, "15": -0.1 },
+    mid: { "6": 1, "8": 0.8, "10": 0.4, "12": 0.1, "15": 0.1 },
+    high: { "6": 1.6, "8": 1.2, "10": 1, "12": 0.4, "15": 0.2 }
+  };
   const SUN_VALUES_BY_BET = new Map([
     [200, 15], [500, 40], [1000, 80], [2000, 160], [5000, 400],
     [10000, 800], [20000, 1600], [50000, 4000], [100000, 8000]
   ]);
   const symbols = [
-    { name: "Matahari", icon: "☀️", chance: 25, factor: 1 },
-    { name: "Bulan", icon: "🌙", chance: 19, factor: 2 },
-    { name: "Bintang", icon: "⭐", chance: 15, factor: 4 },
-    { name: "Permata", icon: "💎", chance: 12, factor: 7 },
-    { name: "Planet", icon: "🪐", chance: 10, factor: 12 },
-    { name: "Kristal", icon: "🔮", chance: 7, factor: 20 },
-    { name: "Mahkota", icon: "👑", chance: 5, factor: 35 },
-    { name: "Trisula", icon: "🔱", chance: 4, factor: 55 },
-    { name: "Kuil", icon: "🏛️", chance: 3, factor: 80 }
+    { name: "Matahari", icon: "☀️", chance: 79.6, factor: 1 },
+    { name: "Bulan", icon: "🌙", chance: 8, factor: 2 },
+    { name: "Bintang", icon: "⭐", chance: 5, factor: 3 },
+    { name: "Permata", icon: "💎", chance: 3, factor: 4 },
+    { name: "Planet", icon: "🪐", chance: 2, factor: 6 },
+    { name: "Kristal", icon: "🔮", chance: 1, factor: 10 },
+    { name: "Mahkota", icon: "👑", chance: 0.8, factor: 20 },
+    { name: "Trisula", icon: "🔱", chance: 0.4, factor: 50 },
+    { name: "Kuil", icon: "🏛️", chance: 0.2, factor: 100 }
   ];
   const defaults = {
+    settingsVersion: SETTINGS_VERSION,
     balance: 100000,
     bet: 200,
     startingCredit: 100000,
     betLevels: [200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-    winChance: 22,
-    nextWinChance: 22,
+    winChance: 7,
+    nextWinChance: 7,
     occurrenceChances: { ...defaultOccurrenceChances },
     nextOccurrenceChances: { ...defaultOccurrenceChances },
     multiplierChance: 2,
     multiplierCountChances: { ...defaultMultiplierCountChances },
-    maxRespins: 10,
-    multiplierWeights: [34, 25, 18, 12, 7, 4],
+    maxRespins: 5,
+    multiplierWeights: [96, 2.2, 1, 0.5, 0.2, 0.1],
+    betChanceAdjustments: structuredClone(defaultBetChanceAdjustments),
     tiers: symbols.map(({ chance, factor }) => ({ chance, factor })),
     plays: 0,
     wins: 0,
@@ -47,6 +55,7 @@
     occurrenceTotal: document.querySelector("#win-chance-total"),
     multiplierChance: document.querySelector("#multiplier-chance"),
     multiplierCountChances: [...document.querySelectorAll("[data-multiplier-count]")],
+    betChanceAdjustments: [...document.querySelectorAll("[data-bet-adjustment]")],
     multiplierOneChance: document.querySelector("#multiplier-one-chance"),
     maxRespins: document.querySelector("#max-respins"),
     betLevels: document.querySelector("#bet-levels"),
@@ -63,6 +72,88 @@
   function boundedNumber(value, min, max, fallback) {
     const number = Number(value);
     return Number.isFinite(number) && number >= min && number <= max ? number : fallback;
+  }
+
+  function normalizeBetChanceAdjustments(source) {
+    return Object.fromEntries(["low", "mid", "high"].map((group) => [
+      group,
+      Object.fromEntries(OCCURRENCE_KEYS.map((key) => [
+        key,
+        boundedNumber(source?.[group]?.[key], -100, 100, defaultBetChanceAdjustments[group][key])
+      ]))
+    ]));
+  }
+
+  function upgradeSavedDefaults(saved) {
+    if (saved.settingsVersion >= SETTINGS_VERSION) return saved;
+
+    const upgraded = { ...saved, settingsVersion: SETTINGS_VERSION };
+    const previousBetChanceAdjustments = {
+      low: { "6": -2, "8": -2, "10": -1, "12": -0.5, "15": -0.2 },
+      mid: { "6": 2, "8": 2, "10": 1, "12": 0.5, "15": 0.3 },
+      high: { "6": 4, "8": 4, "10": 2, "12": 1, "15": 0.5 }
+    };
+    if ((saved.settingsVersion ?? 0) < SETTINGS_VERSION && saved.betChanceAdjustments && typeof saved.betChanceAdjustments === "object") {
+      upgraded.betChanceAdjustments = Object.fromEntries(["low", "mid", "high"].map((group) => [
+        group,
+        Object.fromEntries(OCCURRENCE_KEYS.map((key) => [
+          key,
+          saved.betChanceAdjustments[group]?.[key] === previousBetChanceAdjustments[group][key]
+            ? defaultBetChanceAdjustments[group][key]
+            : saved.betChanceAdjustments[group]?.[key]
+        ]))
+      ]));
+    }
+    const previousChances = { "6": 10, "8": 8, "10": 3, "12": 0.8, "15": 0.2 };
+    if (!saved.occurrenceChances && saved.winChance === 22) {
+      upgraded.winChance = WINNING_RANGES.reduce((total, key) => total + defaultOccurrenceChances[key], 0);
+      if (saved.nextWinChance === 22) upgraded.nextWinChance = upgraded.winChance;
+    }
+    if (saved.occurrenceChances && typeof saved.occurrenceChances === "object") {
+      const chances = { ...saved.occurrenceChances };
+      const nextChances = { ...saved.nextOccurrenceChances };
+      OCCURRENCE_KEYS.forEach((key) => {
+        if (saved.occurrenceChances[key] === previousChances[key]) {
+          chances[key] = defaultOccurrenceChances[key];
+          if (saved.nextOccurrenceChances?.[key] === previousChances[key]) {
+            nextChances[key] = defaultOccurrenceChances[key];
+          } else if (Number.isFinite(saved.nextOccurrenceChances?.[key])) {
+            nextChances[key] = Math.max(0, Number((
+              defaultOccurrenceChances[key] +
+              saved.nextOccurrenceChances[key] -
+              previousChances[key]
+            ).toFixed(1)));
+          }
+        }
+      });
+      upgraded.occurrenceChances = chances;
+      upgraded.nextOccurrenceChances = nextChances;
+    }
+    const previousSymbols = [
+      { chance: 25, factor: 1 }, { chance: 19, factor: 2 }, { chance: 15, factor: 4 },
+      { chance: 12, factor: 7 }, { chance: 10, factor: 12 }, { chance: 7, factor: 20 },
+      { chance: 5, factor: 35 }, { chance: 4, factor: 55 }, { chance: 3, factor: 80 }
+    ];
+    if (Array.isArray(saved.tiers)) {
+      upgraded.tiers = saved.tiers.map((tier, index) => ({
+        ...tier,
+        chance: tier?.chance === previousSymbols[index]?.chance ? symbols[index].chance : tier?.chance,
+        factor: tier?.factor === previousSymbols[index]?.factor ? symbols[index].factor : tier?.factor
+      }));
+    }
+    if (Array.isArray(saved.multiplierWeights)) {
+      upgraded.multiplierWeights = saved.multiplierWeights.map((weight, index) =>
+        weight === [34, 25, 18, 12, 7, 4][index] ? defaults.multiplierWeights[index] : weight
+      );
+    }
+    if (saved.multiplierCountChances && typeof saved.multiplierCountChances === "object") {
+      upgraded.multiplierCountChances = {
+        "2": saved.multiplierCountChances["2"] === 0.1 ? defaultMultiplierCountChances["2"] : saved.multiplierCountChances["2"],
+        "3": saved.multiplierCountChances["3"] === 0.01 ? defaultMultiplierCountChances["3"] : saved.multiplierCountChances["3"]
+      };
+    }
+    if (saved.maxRespins === 10) upgraded.maxRespins = defaults.maxRespins;
+    return upgraded;
   }
 
   function normalizeOccurrenceChances(source, legacyTotal, fallback) {
@@ -127,6 +218,7 @@
   let savedState = null;
   try {
     savedState = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (savedState && typeof savedState === "object") savedState = upgradeSavedDefaults(savedState);
     state = savedState && typeof savedState === "object" ? { ...structuredClone(defaults), ...savedState } : structuredClone(defaults);
   } catch (error) {
     console.warn("Konfigurasi tersimpan tidak dapat dibaca; nilai awal digunakan.", error);
@@ -153,6 +245,7 @@
   state.multiplierWeights = MULTIPLIERS.map((_, index) =>
     boundedNumber(state.multiplierWeights?.[index], 0, 100, defaults.multiplierWeights[index])
   );
+  state.betChanceAdjustments = normalizeBetChanceAdjustments(state.betChanceAdjustments);
   if (state.multiplierWeights.every((weight) => weight === 0)) state.multiplierWeights[0] = 1;
   state.startingCredit = boundedNumber(state.startingCredit, 1000, 1000000000, defaults.startingCredit);
   state.occurrenceChances = normalizeOccurrenceChances(savedState?.occurrenceChances, savedState?.winChance, defaults.occurrenceChances);
@@ -353,6 +446,16 @@
     save();
   }
 
+  function commitBetChanceAdjustment(input) {
+    const group = input.dataset.betAdjustmentGroup;
+    const key = input.dataset.betAdjustment;
+    const fallback = state.betChanceAdjustments[group][key];
+    const value = boundedNumber(input.value, -100, 100, fallback);
+    state.betChanceAdjustments[group][key] = value;
+    input.value = String(value);
+    save();
+  }
+
   function commitOccurrenceChance(input) {
     const key = input.dataset.occurrence;
     const previous = state.occurrenceChances[key];
@@ -385,6 +488,10 @@
   });
   elements.maxRespins.value = String(boundedNumber(state.maxRespins, 0, 50, defaults.maxRespins));
   elements.betLevels.value = state.betLevels.join("\n");
+  elements.betChanceAdjustments.forEach((input) => {
+    input.value = String(state.betChanceAdjustments[input.dataset.betAdjustmentGroup][input.dataset.betAdjustment]);
+    input.addEventListener("change", () => commitBetChanceAdjustment(input));
+  });
   elements.startingCredit.addEventListener("change", () => commitBasic(elements.startingCredit, 1000, 1000000000, "startingCredit", true));
   elements.multiplierChance.addEventListener("change", commitMultiplierChance);
   elements.maxRespins.addEventListener("change", () => commitBasic(elements.maxRespins, 0, 50, "maxRespins", true));
@@ -414,6 +521,7 @@
       nextOccurrenceChances: { ...defaultOccurrenceChances },
       multiplierChance: defaults.multiplierChance,
       multiplierCountChances: { ...defaultMultiplierCountChances },
+      betChanceAdjustments: structuredClone(defaultBetChanceAdjustments),
       maxRespins: defaults.maxRespins,
       multiplierWeights: [...defaults.multiplierWeights],
       tiers: defaults.tiers.map((tier) => ({ ...tier })),
@@ -424,6 +532,9 @@
     elements.multiplierChance.value = String(state.multiplierChance);
     elements.multiplierCountChances.forEach((input) => {
       input.value = String(state.multiplierCountChances[input.dataset.multiplierCount]);
+    });
+    elements.betChanceAdjustments.forEach((input) => {
+      input.value = String(state.betChanceAdjustments[input.dataset.betAdjustmentGroup][input.dataset.betAdjustment]);
     });
     elements.maxRespins.value = String(state.maxRespins);
     elements.betLevels.value = state.betLevels.join("\n");
@@ -443,10 +554,14 @@
       state.nextWinChance = getTotalOccurrenceChance(state.nextOccurrenceChances);
       state.multiplierChance = boundedNumber(latest.multiplierChance, 0, 100, defaults.multiplierChance);
       state.multiplierCountChances = normalizeMultiplierCountChances(latest.multiplierCountChances, state.multiplierChance);
+      state.betChanceAdjustments = normalizeBetChanceAdjustments(latest.betChanceAdjustments);
       elements.occurrenceChances.forEach((input) => { input.value = String(state.occurrenceChances[input.dataset.occurrence]); });
       elements.multiplierChance.value = String(state.multiplierChance);
       elements.multiplierCountChances.forEach((input) => {
         input.value = String(state.multiplierCountChances[input.dataset.multiplierCount]);
+      });
+      elements.betChanceAdjustments.forEach((input) => {
+        input.value = String(state.betChanceAdjustments[input.dataset.betAdjustmentGroup][input.dataset.betAdjustment]);
       });
       elements.maxRespins.value = String(state.maxRespins);
       elements.betLevels.value = state.betLevels.join("\n");

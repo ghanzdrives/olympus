@@ -6,6 +6,15 @@
 .admin-intro { max-width: 760px; margin: 14px 0 22px; color: #9da9bf; font-size: 11px; line-height: 1.7; }
 .admin-card { margin-top: 12px; padding: 17px; border: 1px solid var(--line); border-radius: 10px; background: rgba(16,24,39,.92); }
 .admin-card h2 { margin: 0; color: #e1e7f2; font-size: 14px; }
+.bet-adjustments { margin-top: 13px; padding: 12px; border: 1px solid rgba(163,179,224,.1); border-radius: 7px; background: rgba(7,12,25,.22); }
+.bet-adjustments .admin-section-heading { margin-bottom: 8px; }
+.bet-adjustments h3 { margin: 0; color: #dfe5f1; font-size: 11px; }
+.bet-adjustment-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.bet-adjustment-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; min-width: 0; margin: 0; padding: 9px; border: 1px solid rgba(163,179,224,.12); border-radius: 6px; }
+.bet-adjustment-group legend { padding: 0 4px; color: #c8d1e1; font-size: 9px; }
+.bet-adjustment-group legend span { color: var(--gold); }
+.bet-adjustment-group .admin-field { font-size: 8px; }
+.bet-adjustment-group .admin-field input { padding: 6px; }
 .admin-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
 .admin-field { display: flex; min-width: 0; flex-direction: column; gap: 6px; color: #aeb9cf; font-size: 9px; line-height: 1.4; }
 .admin-field input, .admin-field textarea, .admin-table input, .multiplier-card input { min-width: 0; width: 100%; padding: 8px; border: 1px solid rgba(163,179,224,.15); border-radius: 5px; outline: none; background: #0b1322; color: var(--text); font-size: 11px; }
@@ -39,6 +48,11 @@ body:has(.admin-shell) footer { padding-bottom: 20px; }
   .admin-shell { width: calc(100% - 22px); margin-top: 20px; }
   .admin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .admin-card { padding: 13px; }
+  .bet-adjustments { padding: 9px; }
+  .bet-adjustment-groups { grid-template-columns: 1fr; }
+  .bet-adjustment-group { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bet-adjustment-group legend { font-size: 8px; }
+  .bet-adjustment-group .admin-field { font-size: 7px; }
   .admin-multipliers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .admin-table { min-width: 560px; }
 }
