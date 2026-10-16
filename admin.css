@@ -60,3 +60,173 @@ body:has(.admin-shell) footer { padding-bottom: 20px; }
   .topbar-note { display: none; }
   .admin-title { align-items: flex-start; flex-direction: column; }
 }
+
+.admin-shell { width: min(1240px, calc(100% - 48px)); margin: 38px auto 56px; }
+.admin-title { gap: 20px; }
+.admin-title .eyebrow { color: #a8dfff; }
+.admin-title h1 { color: #f0f4fc; font-size: clamp(30px, 4vw, 44px); }
+.virtual-badge { border-color: rgba(139, 213, 255, .24); background: linear-gradient(120deg, rgba(139, 213, 255, .08), rgba(185, 162, 255, .08)); color: #c5dfff; font-size: 9px; }
+.admin-intro { max-width: 900px; margin: 16px 0 25px; color: #a9b5c9; font-size: 13px; line-height: 1.75; }
+.admin-card {
+  margin-top: 16px;
+  padding: 22px;
+  border-color: rgba(170, 194, 234, .13);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(24, 30, 45, .96), rgba(16, 21, 33, .97));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .035);
+}
+.admin-card h2 { color: #e9eef8; font-size: 17px; letter-spacing: -.02em; }
+.admin-grid { gap: 14px; margin-top: 17px; }
+.admin-field { gap: 7px; color: #b7c3d7; font-size: 11px; }
+.admin-field input, .admin-field textarea, .admin-table input, .multiplier-card input {
+  padding: 10px;
+  border-color: rgba(161, 184, 226, .17);
+  border-radius: 8px;
+  background: rgba(8, 13, 22, .7);
+  color: #edf3ff;
+  font-size: 12px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.admin-field input:focus, .admin-field textarea:focus, .admin-table input:focus, .multiplier-card input:focus { border-color: rgba(139, 213, 255, .62); box-shadow: 0 0 0 3px rgba(139, 213, 255, .08); }
+.admin-hint, .admin-section-heading p { color: #9aa8be; font-size: 10px; line-height: 1.7; }
+.admin-section-heading > strong { color: #a8dfff; font-size: 12px; }
+.admin-table th { color: #a6b4c9; font-size: 10px; }
+.admin-table td { border-top-color: rgba(197, 210, 255, .09); color: #cbd5e5; font-size: 11px; }
+.admin-table td:last-child { color: #b9dfff; }
+.bet-adjustments { border-color: rgba(153, 177, 221, .13); border-radius: 11px; background: linear-gradient(145deg, rgba(9, 14, 24, .55), rgba(34, 37, 56, .35)); }
+.bet-adjustments h3 { color: #e5ebf7; font-size: 13px; }
+.bet-adjustment-groups { gap: 10px; }
+.bet-adjustment-group { gap: 9px; padding: 11px; border-color: rgba(161, 184, 226, .15); border-radius: 9px; background: rgba(8, 13, 22, .25); }
+.bet-adjustment-group legend { color: #d1daea; font-size: 10px; }
+.bet-adjustment-group legend span { color: #b8a9ff; }
+.bet-adjustment-group .admin-field { font-size: 9px; }
+.bet-adjustment-group .admin-field input { padding: 8px; }
+.admin-table-wrap { border: 1px solid rgba(161, 184, 226, .1); border-radius: 10px; }
+.admin-table th { padding: 10px; }
+.admin-table td { padding: 8px 10px; }
+.table-symbol { font-size: 18px; }
+.admin-multipliers { gap: 11px; }
+.multiplier-card { gap: 7px; color: #a8dfff; font-size: 11px; }
+.multiplier-card small { color: #9baac0; font-size: 9px; }
+.admin-actions { gap: 14px; margin-top: 18px; }
+.restore-button { padding: 10px 14px; border-radius: 8px; background: linear-gradient(120deg, rgba(139, 213, 255, .1), rgba(185, 162, 255, .08)); color: #d5e8ff; font-size: 10px; }
+.restore-button:hover { border-color: rgba(139, 213, 255, .45); }
+.save-status { color: #a6b4c9; font-size: 10px; }
+.admin-shell .formula-note { max-width: 980px; color: #9aa8be; font-size: 10px; }
+@media (max-width: 900px) {
+  .admin-shell { width: min(100% - 28px, 780px); margin: 24px auto 42px; }
+  .admin-card { padding: 17px; }
+  .admin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bet-adjustments { padding: 11px; }
+  .bet-adjustment-groups { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .admin-shell { width: calc(100% - 20px); margin-top: 18px; }
+  .admin-card { padding: 13px; border-radius: 12px; }
+  .admin-grid { gap: 10px; }
+  .admin-field { font-size: 9px; }
+  .admin-field input, .admin-field textarea { padding: 8px; font-size: 11px; }
+}
+
+/* Match the redesigned game interface while keeping long settings scrollable. */
+.admin-shell {
+  width: min(1480px, calc(100% - 48px));
+  margin: clamp(24px, 4vh, 48px) auto 52px;
+}
+.admin-title { gap: 20px; }
+.admin-title .eyebrow { color: #a8dfff; }
+.admin-title h1 { color: #f0f4fc; font-size: clamp(30px, 4vw, 46px); }
+.virtual-badge {
+  padding: 8px 12px;
+  border-color: rgba(139, 213, 255, .26);
+  border-radius: 999px;
+  background: linear-gradient(120deg, rgba(139, 213, 255, .09), rgba(185, 162, 255, .09));
+  color: #c5dfff;
+  font-size: 9px;
+}
+.admin-intro { max-width: 980px; color: #a9b5c9; font-size: 13px; line-height: 1.75; }
+.admin-card {
+  margin-top: 18px;
+  padding: clamp(16px, 2vw, 26px);
+  border-color: rgba(170, 194, 234, .15);
+  border-radius: 17px;
+  background: linear-gradient(145deg, rgba(24, 30, 45, .97), rgba(16, 21, 33, .98));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .035);
+}
+.admin-card h2 { color: #e9eef8; font-size: 17px; }
+.admin-grid { gap: 14px; }
+.admin-field { gap: 7px; color: #b7c3d7; font-size: 11px; }
+.admin-field input, .admin-field textarea, .admin-table input, .multiplier-card input {
+  padding: 10px;
+  border-color: rgba(161, 184, 226, .19);
+  border-radius: 8px;
+  background: rgba(8, 13, 22, .74);
+  color: #edf3ff;
+  font-size: 12px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.admin-field input:focus, .admin-field textarea:focus, .admin-table input:focus, .multiplier-card input:focus {
+  border-color: rgba(139, 213, 255, .68);
+  box-shadow: 0 0 0 3px rgba(139, 213, 255, .09);
+}
+.admin-hint, .admin-section-heading p { color: #9aa8be; font-size: 10px; line-height: 1.7; }
+.admin-section-heading > strong { color: #a8dfff; font-size: 12px; }
+.admin-table th { color: #a6b4c9; font-size: 10px; }
+.admin-table td { border-top-color: rgba(197, 210, 255, .09); color: #cbd5e5; font-size: 11px; }
+.admin-table td:last-child { color: #b9dfff; }
+.bet-adjustments {
+  border-color: rgba(153, 177, 221, .15);
+  border-radius: 11px;
+  background: linear-gradient(145deg, rgba(9, 14, 24, .58), rgba(34, 37, 56, .38));
+}
+.bet-adjustments h3 { color: #e5ebf7; font-size: 13px; }
+.bet-adjustment-groups { gap: 10px; }
+.bet-adjustment-group {
+  gap: 9px;
+  padding: 11px;
+  border-color: rgba(161, 184, 226, .17);
+  border-radius: 9px;
+  background: rgba(8, 13, 22, .28);
+}
+.bet-adjustment-group legend { color: #d1daea; font-size: 10px; }
+.bet-adjustment-group legend span { color: #b8a9ff; }
+.bet-adjustment-group .admin-field { font-size: 9px; }
+.bet-adjustment-group .admin-field input { padding: 8px; }
+.admin-table-wrap { border: 1px solid rgba(161, 184, 226, .12); border-radius: 10px; }
+.admin-table th { padding: 10px; }
+.admin-table td { padding: 8px 10px; }
+.table-symbol { font-size: 18px; }
+.admin-multipliers { gap: 11px; }
+.multiplier-card { gap: 7px; color: #a8dfff; font-size: 11px; }
+.multiplier-card small { color: #9baac0; font-size: 9px; }
+.admin-actions { gap: 14px; margin-top: 18px; }
+.restore-button {
+  min-height: 40px;
+  padding: 9px 13px;
+  border-color: rgba(139, 213, 255, .25);
+  border-radius: 8px;
+  background: linear-gradient(120deg, rgba(139, 213, 255, .1), rgba(185, 162, 255, .08));
+  color: #d5e8ff;
+  font-size: 10px;
+}
+.restore-button:hover { border-color: rgba(139, 213, 255, .5); }
+.save-status { color: #a6b4c9; font-size: 10px; }
+.admin-shell .formula-note { max-width: 1080px; color: #9aa8be; font-size: 10px; line-height: 1.7; }
+body:has(.admin-shell) footer { padding-bottom: 14px; }
+@media (max-width: 900px) {
+  .admin-shell { width: min(100% - 28px, 820px); margin: 24px auto 42px; }
+  .admin-card { padding: 17px; }
+  .admin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bet-adjustments { padding: 11px; }
+  .bet-adjustment-groups { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .admin-shell { width: calc(100% - 20px); margin-top: 18px; }
+  .admin-title { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .admin-card { padding: 13px; border-radius: 12px; }
+  .admin-grid { gap: 10px; }
+  .admin-field { font-size: 9px; }
+  .admin-field input, .admin-field textarea { padding: 8px; font-size: 11px; }
+  .bet-adjustment-group { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-table { min-width: 560px; }
+}

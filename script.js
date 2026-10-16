@@ -28,7 +28,8 @@
   const SPIN_DURATION = 1700;
   const MULTIPLIER_DURATION = 1250;
   const WIN_HIGHLIGHT_DURATION = 2200;
-  const AUTOPLAY_SPEED_FACTOR = 1.25;
+  const AUTOPLAY_SPEEDS = [1, 1.25, 1.5, 1.75, 2];
+  const AUTOPLAY_SPEED_LABELS = ["1×", "1,25×", "1,50×", "1,75×", "2×"];
   const MULTIPLIERS = [2, 5, 10, 20, 50, 100];
   const symbols = [
     { tier: 1, name: "Matahari", icon: "☀️", chance: 79.6, factor: 1 },
@@ -69,6 +70,8 @@
     selectedBetLabel: document.querySelector("#selected-bet-label"),
     autoCount: document.querySelector("#auto-count"),
     autoCountLabel: document.querySelector("#auto-count-label"),
+    autoSpeed: document.querySelector("#auto-speed"),
+    autoSpeedValue: document.querySelector("#auto-speed-value"),
     autoStart: document.querySelector("#auto-start"),
     autoStop: document.querySelector("#auto-stop"),
     autoStatus: document.querySelector("#auto-status"),
@@ -447,6 +450,7 @@
   let topupProcessing = false;
   let autoRoundsRemaining = null;
   let autoPayoutTotal = 0;
+  let autoplaySpeed = AUTOPLAY_SPEEDS[1];
 
   function saveState() {
     try {
@@ -541,6 +545,7 @@
     elements.autoStart.disabled = spinning || autoRunning || state.balance < state.bet;
     elements.autoStop.hidden = !autoRunning;
     elements.autoCount.disabled = spinning || autoRunning;
+    elements.autoSpeed.disabled = spinning || autoRunning;
     elements.autoCountLabel.textContent = autoRunning ? "Putaran tersisa" : "Jumlah putaran";
     if (autoRunning && autoRoundsRemaining !== null) {
       elements.autoCount.value = String(autoRoundsRemaining);
@@ -924,7 +929,7 @@
 
   async function animateMultiplierDrops(multipliers, accelerated, hasWinningGroup) {
     if (!multipliers.length) return;
-    const duration = MULTIPLIER_DURATION / (accelerated ? 1.1 : 1);
+    const duration = MULTIPLIER_DURATION / (accelerated ? autoplaySpeed : 1);
     for (const multiplier of multipliers) {
       const cell = elements.board.querySelector(`[data-position="${multiplier.position}"]`);
       if (!cell) continue;
@@ -945,7 +950,7 @@
         { transform: `translateY(${travel * 0.82}px) scale(1.1)`, opacity: 1, offset: 0.78 },
         { transform: `translateY(${travel}px) scale(.94)`, opacity: 1 }
       ], { duration: durationAdjusted, easing: "cubic-bezier(.18,.78,.24,1)", fill: "forwards" });
-      await delay(durationAdjusted + 80);
+      await delay(durationAdjusted + (accelerated ? 80 / autoplaySpeed : 80));
       animation.cancel();
       drop.remove();
       cell.classList.add("has-multiplier");
@@ -955,11 +960,11 @@
       cell.append(badge);
     }
     if (hasWinningGroup && multipliers.length > 1) {
-      await animateMultiplierCombination(multipliers);
+      await animateMultiplierCombination(multipliers, accelerated);
     }
   }
 
-  async function animateMultiplierCombination(multipliers) {
+  async function animateMultiplierCombination(multipliers, accelerated) {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const anchor = elements.board.querySelector(`[data-position="${multipliers[0].position}"]`);
     if (!anchor) return;
@@ -1002,12 +1007,12 @@
               transform: `translate(${targetRect.left + targetRect.width / 2 - sourceRect.left - sourceRect.width / 2}px, ${targetRect.top + targetRect.height / 2 - sourceRect.top - sourceRect.height / 2}px) scale(.18) rotate(180deg)`,
               opacity: 0
             }
-          ], { duration: 560, easing: "cubic-bezier(.2,.75,.25,1)", fill: "forwards" });
+          ], { duration: 560 / (accelerated ? autoplaySpeed : 1), easing: "cubic-bezier(.2,.75,.25,1)", fill: "forwards" });
           const impact = anchorBadge.animate([
             { transform: "scale(1)" },
             { transform: "scale(1.3)" },
             { transform: "scale(1)" }
-          ], { duration: 560, easing: "cubic-bezier(.2,.75,.25,1)" });
+          ], { duration: 560 / (accelerated ? autoplaySpeed : 1), easing: "cubic-bezier(.2,.75,.25,1)" });
           await Promise.all([flight.finished, impact.finished]);
         }
 
@@ -1021,11 +1026,11 @@
           comboLabel.textContent = `MULTIPLIER ${index + 1} DARI ${multipliers.length}`;
           comboEquation.textContent = `×${formatMultiplier(product / multipliers[index].value)} × ×${formatMultiplier(multipliers[index].value)} = ×${formatMultiplier(product)}`;
         }
-        await delay(reducedMotion ? 0 : 180);
+        await delay(reducedMotion ? 0 : 180 / (accelerated ? autoplaySpeed : 1));
       }
       comboLabel.textContent = "HASIL MULTIPLIER GABUNGAN";
       comboEquation.textContent = `×${formatMultiplier(product)}`;
-      await delay(reducedMotion ? 0 : 350);
+      await delay(reducedMotion ? 0 : 350 / (accelerated ? autoplaySpeed : 1));
     } finally {
       combo.remove();
     }
@@ -1035,7 +1040,7 @@
     elements.board.classList.add("board-spinning");
     const cells = [...elements.board.querySelectorAll(".slot-cell")];
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const duration = reducedMotion ? 100 : SPIN_DURATION / (accelerated ? AUTOPLAY_SPEED_FACTOR : 1);
+    const duration = reducedMotion ? 100 : SPIN_DURATION / (accelerated ? autoplaySpeed : 1);
     const lastCellDelay = reducedMotion ? 0 : Math.min(230, duration * 0.14);
     const reelAnimations = [];
 
@@ -1089,7 +1094,7 @@
 
     const matchingCells = [...elements.board.querySelectorAll(".slot-cell")];
     round.wins.forEach((win) => win.positions.forEach((position) => matchingCells[position].classList.add("is-match")));
-    await delay(WIN_HIGHLIGHT_DURATION / (accelerated ? 1.2 : 1));
+    await delay(WIN_HIGHLIGHT_DURATION / (accelerated ? autoplaySpeed : 1));
   }
 
   function setResult(title, detail, kind = "neutral") {
@@ -1169,7 +1174,7 @@
           clearMultiplierBadges();
           freeSpins += 1;
           elements.spinKind.textContent = `PUTARAN GRATIS ${freeSpins}/${settings.maxRespins}`;
-          await delay(350);
+          await delay(350 / (accelerated ? autoplaySpeed : 1));
         } else {
           capped = round.wins.length > 0;
           break;
@@ -1249,7 +1254,7 @@
       completed += 1;
       autoRoundsRemaining = rounds - completed;
       render();
-      if (completed < rounds && !autoStopRequested && state.balance >= state.bet) await delay(180);
+      if (completed < rounds && !autoStopRequested && state.balance >= state.bet) await delay(180 / autoplaySpeed);
     }
     if (autoPayoutTotal > 0) {
       const payoutTotal = autoPayoutTotal;
@@ -1344,6 +1349,14 @@
     if (autoRunning) return;
     const requested = Number(elements.autoCount.value);
     elements.autoCount.value = String(Number.isFinite(requested) ? Math.max(1, Math.min(100, Math.trunc(requested))) : 10);
+  });
+  elements.autoSpeed.addEventListener("input", () => {
+    const speedIndex = Number(elements.autoSpeed.value);
+    autoplaySpeed = AUTOPLAY_SPEEDS[speedIndex];
+    const label = AUTOPLAY_SPEED_LABELS[speedIndex];
+    elements.autoSpeedValue.value = label;
+    elements.autoSpeedValue.textContent = label;
+    elements.autoSpeed.setAttribute("aria-valuetext", label.replace("×", " kali"));
   });
   elements.reset.addEventListener("click", resetGame);
   elements.clearHistory.addEventListener("click", (event) => {

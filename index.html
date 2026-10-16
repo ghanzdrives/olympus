@@ -54,7 +54,12 @@
       <button class="spin-button" id="spin" type="button"><span aria-hidden="true">✦</span> PUTAR</button>
 
       <section class="auto-section" aria-label="Putar otomatis">
-        <div class="section-heading"><h2>Putar otomatis</h2><span class="speed-note">1,25× cepat</span></div>
+        <div class="section-heading"><h2>Putar otomatis</h2><output class="speed-note" id="auto-speed-value" for="auto-speed">1,25×</output></div>
+        <div class="auto-speed-control">
+          <label class="auto-speed-label" for="auto-speed">Kecepatan putaran</label>
+          <input id="auto-speed" class="auto-speed-slider" type="range" min="0" max="4" step="1" value="1" aria-valuetext="1,25 kali">
+          <div class="auto-speed-options" aria-hidden="true"><span>1×</span><span>1,25×</span><span>1,50×</span><span>1,75×</span><span>2×</span></div>
+        </div>
         <div class="auto-controls">
           <label class="auto-count" for="auto-count"><span id="auto-count-label">Jumlah putaran</span><input id="auto-count" type="number" min="1" max="100" step="1" value="10"></label>
           <button class="auto-button" id="auto-start" type="button">Mulai</button>
