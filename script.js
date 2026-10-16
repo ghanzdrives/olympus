@@ -81,6 +81,7 @@
     result: document.querySelector("#result"),
     resultIcon: document.querySelector("#result-icon"),
     resultDetail: document.querySelector("#result-detail"),
+    resultPanel: document.querySelector(".result-panel"),
     creditOverlay: document.querySelector("#credit-overlay"),
     creditTitle: document.querySelector("#credit-title"),
     creditAmount: document.querySelector("#credit-amount"),
@@ -1046,7 +1047,7 @@
 
     cells.forEach((cell, position) => {
       const target = round.symbols[position];
-      const cellHeight = cell.getBoundingClientRect().height;
+      const cellHeight = cell.clientHeight;
       const reel = document.createElement("span");
       reel.className = "reel-strip";
       reel.style.setProperty("--cell-height", `${cellHeight}px`);
@@ -1068,22 +1069,20 @@
       const stagger = reducedMotion ? 0 : lastCellDelay * (row * 0.4 + column) / (ROWS * 0.4 + COLUMNS - 1);
       reelAnimations.push(reel.animate(
         [
-          { transform: `translate3d(0, -${cellHeight * 11}px, 0) scale(.94)`, offset: 0 },
-          { transform: `translate3d(0, -${cellHeight * 0.8}px, 0) scale(1)`, offset: 0.78, easing: "cubic-bezier(.12,.72,.2,1)" },
-          { transform: `translate3d(0, ${cellHeight * 0.08}px, 0) scale(1)`, offset: 0.94, easing: "cubic-bezier(.2,.68,.28,1)" },
-          { transform: "translate3d(0, 0, 0) scale(1)", offset: 1 }
+          { transform: `translateY(-${cellHeight * 11}px)` },
+          { transform: "translateY(0)" }
         ],
         {
           duration: duration - lastCellDelay,
           delay: stagger,
-          easing: "linear",
+          easing: "cubic-bezier(.2,.75,.25,1)",
           fill: "forwards"
         }
       ));
     });
 
     try {
-      await delay(duration + 50);
+      await Promise.all(reelAnimations.map((animation) => animation.finished));
     } finally {
       reelAnimations.forEach((animation) => animation.cancel());
       elements.board.classList.remove("board-spinning", "auto-speed");
@@ -1102,6 +1101,8 @@
     elements.resultDetail.textContent = detail;
     elements.resultIcon.textContent = kind === "win" ? "✦" : kind === "loss" ? "◎" : "↻";
     elements.resultIcon.className = kind === "win" ? "result-win" : kind === "loss" ? "result-loss" : "";
+    elements.resultPanel.classList.toggle("result-panel-loss", kind === "loss");
+    elements.resultPanel.classList.toggle("result-panel-reset", kind === "reset");
   }
 
   function snapshot() {
@@ -1229,7 +1230,7 @@
         : "Saldo diperbarui setelah rangkaian selesai.";
       setResult(`Total hadiah ${formatMoney(totalPayout)}`, `${matchedCount} bentuk menang · ${freeSpins} putaran gratis${multiplierNote}${suffix}. ${payoutTiming}`, "win");
     } else {
-      setResult("Putaran selesai tanpa hadiah.", `Taruhan ${formatMoney(wager)} digunakan. Saldo: ${formatMoney(state.balance)}.`);
+      setResult("Putaran selesai tanpa hadiah.", `Taruhan ${formatMoney(wager)} digunakan. Saldo: ${formatMoney(state.balance)}.`, "loss");
     }
     elements.roundLabel.textContent = "SIAP · 35 POSISI";
     saveState();
@@ -1301,7 +1302,7 @@
     state.history = [];
     elements.spinKind.textContent = "PUTARAN UTAMA";
     elements.creditOverlay.hidden = true;
-    setResult("Saldo permainan telah diatur ulang.", "Saldo virtual kembali ke nilai awal. Pengaturan permainan tetap tersimpan.");
+    setResult("Saldo permainan telah diatur ulang.", "Saldo virtual kembali ke nilai awal. Pengaturan permainan tetap tersimpan.", "reset");
     drawPreview();
     saveState();
     render();
