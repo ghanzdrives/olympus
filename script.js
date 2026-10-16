@@ -1047,9 +1047,12 @@
 
     cells.forEach((cell, position) => {
       const target = round.symbols[position];
-      const cellHeight = cell.clientHeight;
+      const cellHeight = cell.getBoundingClientRect().height
+        - Number.parseFloat(getComputedStyle(cell).borderTopWidth)
+        - Number.parseFloat(getComputedStyle(cell).borderBottomWidth);
       const reel = document.createElement("span");
       reel.className = "reel-strip";
+      reel.setAttribute("aria-hidden", "true");
       reel.style.setProperty("--cell-height", `${cellHeight}px`);
       const finalFace = document.createElement("span");
       finalFace.className = "cell-symbol reel-symbol";
@@ -1063,13 +1066,16 @@
         reel.append(face);
       }
       cell.className = `slot-cell tier-${target.tier}`;
+      cell.setAttribute("aria-label", `Baris ${Math.floor(position / COLUMNS) + 1}, kolom ${position % COLUMNS + 1}: ${target.name}`);
       cell.replaceChildren(reel);
       const row = Math.floor(position / COLUMNS);
       const column = position % COLUMNS;
       const stagger = reducedMotion ? 0 : lastCellDelay * (row * 0.4 + column) / (ROWS * 0.4 + COLUMNS - 1);
+      const startTransform = `translateY(-${cellHeight * 11}px)`;
+      reel.style.transform = startTransform;
       reelAnimations.push(reel.animate(
         [
-          { transform: `translateY(-${cellHeight * 11}px)` },
+          { transform: startTransform },
           { transform: "translateY(0)" }
         ],
         {
@@ -1084,10 +1090,13 @@
     try {
       await Promise.all(reelAnimations.map((animation) => animation.finished));
     } finally {
-      reelAnimations.forEach((animation) => animation.cancel());
+      reelAnimations.forEach((animation, index) => {
+        const reel = cells[index].firstElementChild;
+        if (reel?.classList.contains("reel-strip")) reel.style.transform = "translateY(0)";
+        animation.cancel();
+      });
       elements.board.classList.remove("board-spinning", "auto-speed");
     }
-    renderBoard(round.symbols);
     await animateMultiplierDrops(round.multipliers, accelerated, round.wins.length > 0);
     if (!round.wins.length) return;
 
@@ -1101,6 +1110,7 @@
     elements.resultDetail.textContent = detail;
     elements.resultIcon.textContent = kind === "win" ? "✦" : kind === "loss" ? "◎" : "↻";
     elements.resultIcon.className = kind === "win" ? "result-win" : kind === "loss" ? "result-loss" : "";
+    elements.resultPanel.classList.toggle("result-panel-win", kind === "win");
     elements.resultPanel.classList.toggle("result-panel-loss", kind === "loss");
     elements.resultPanel.classList.toggle("result-panel-reset", kind === "reset");
   }
