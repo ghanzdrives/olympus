@@ -1110,6 +1110,7 @@
     elements.resultDetail.textContent = detail;
     elements.resultIcon.textContent = kind === "win" ? "✦" : kind === "loss" ? "◎" : "↻";
     elements.resultIcon.className = kind === "win" ? "result-win" : kind === "loss" ? "result-loss" : "";
+    elements.resultPanel.classList.toggle("result-panel-ready", kind === "ready");
     elements.resultPanel.classList.toggle("result-panel-win", kind === "win");
     elements.resultPanel.classList.toggle("result-panel-loss", kind === "loss");
     elements.resultPanel.classList.toggle("result-panel-reset", kind === "reset");
